@@ -1,0 +1,57 @@
+<nav class="navbar navbar-dark fixed-top shadow bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold text-success" href="/">Server-side Rendering Project</a>
+    <button class="navbar-toggler shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">My SSR App</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <form class="d-flex mb-3" style="height: 30px;" action="https://www.google.com/search?" target="_blank" method="get">
+          <input class="form-control me-2" type="search" name="q" id="search_bar" placeholder="Search Google" aria-label="Search" autocomplete="off">
+          <button class="btn btn-outline-success btn-sm" id="search_btn" type="submit">Search</button>
+        </form>
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <% if (!loggedIn) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-success" href="/">Sign in</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/">Register</a>
+          </li>
+          <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item dropdown mt-2 mb-5">
+            <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Features
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
+              <li><a class="dropdown-item" href="/users/profile">My Profile</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="/tasks">My Tasks</a></li>
+              <li><a class="dropdown-item" href="/posts">My Posts</a></li>
+              <li><a class="dropdown-item" href="/reviews">Movie Reviews</a></li>
+              <li><a class="dropdown-item" href="/dashboard">API routes</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <form action="/logout?_method=DELETE" method="post">
+              <button type="submit" class="btn btn-outline-danger">Log out</button>
+            </form>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
