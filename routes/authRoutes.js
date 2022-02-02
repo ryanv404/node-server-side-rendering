@@ -1,24 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const {authenticateUser} = require('../middleware/authentication');
+const passport = require('passport');
 const {
-  homepage,
-  register,
-  login,
-  logout,
+  showHomepage,
+  registerUser,
+  loginUser,
+  logoutUser,
   verifyEmail,
   forgotPassword,
   forgotPasswordPage,
   resetPassword,
   resetPasswordPage,
-  dashboard
+  showDashboard,
+  ensureAuthenticated,
+  forwardAuthenticated
 } = require("../controllers/authController");
 
-router.get('/', homepage)
-router.get('/dashboard', dashboard)
-router.post('/register', register);
-router.post('/login', login);
-router.delete('/logout', authenticateUser, logout);
+router.get('/', forwardAuthenticated, showHomepage)
+router.get('/dashboard', ensureAuthenticated, showDashboard)
+router.post('/register', registerUser);
+router.post('/login', passport.authenticate('local', {failureRedirect: '/', failureFlash: true}), loginUser);
+router.delete('/logout', ensureAuthenticated, logoutUser);
 router.get('/verify-email', verifyEmail);
 router.route('/reset-password').get(resetPasswordPage).post(resetPassword);
 router.route('/forgot-password').get(forgotPasswordPage).post(forgotPassword);

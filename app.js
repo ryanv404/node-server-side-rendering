@@ -1,11 +1,9 @@
 require("dotenv").config();
-require("express-async-errors");
 
 const path = require("path");
 const methodOverride = require("method-override");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
-const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
 const fileUpload = require("express-fileupload");
 const rateLimiter = require("express-rate-limit");
@@ -13,13 +11,6 @@ const helmet = require("helmet");
 const xss = require("xss-clean");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
-
-// Routers
-const userRouter = require("./routes/userRoutes");
-const authRouter = require("./routes/authRoutes");
-const orderRouter = require("./routes/orderRoutes");
-const reviewRouter = require("./routes/reviewRoutes");
-const productRouter = require("./routes/productRoutes");
 
 // Express
 const express = require("express");
@@ -47,8 +38,7 @@ app.set("view engine", "ejs");
 // Express body parsers
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
-// Redirect POST request to DELETE or PUT with:
-// "?_method=DELETE" or "?_method=PUT"
+// Redirect POST request to DELETE or PUT with "?_method=DELETE" or "?_method=PUT"
 app.use(methodOverride("_method"));
 if (process.env.NODE_ENV === "development") {
   // Load logger in dev mode only
@@ -66,15 +56,14 @@ app.use(cors());
 app.use(xss());
 // Remove keys beginning with '$' to prevent query selector injection attacks
 app.use(mongoSanitize());
-app.use(cookieParser(process.env.JWT_SECRET));
 app.use("/public", express.static(path.join(__dirname, "public")));
 // Attach file objects from input fields onto req.files
 app.use(fileUpload());
 
-// Express session
+// Express session config
 app.use(
   session({
-    name: "rv",
+    name: "app-SID",
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
@@ -101,6 +90,12 @@ app.use((req, res, next) => {
 });
 
 // Routes
+const userRouter = require("./routes/userRoutes");
+const authRouter = require("./routes/authRoutes");
+const orderRouter = require("./routes/orderRoutes");
+const reviewRouter = require("./routes/reviewRoutes");
+const productRouter = require("./routes/productRoutes");
+
 app.use("/", authRouter);
 app.use("/users", require("./routes/users.js"));
 app.use("/tasks", require("./routes/tasks.js"));
@@ -119,9 +114,7 @@ app.use(require("./middleware/error-handler"));
 // Start server
 const PORT = process.env.PORT || 3000;
 const start_server = () => {
-  // Connect to MongoDB
   require("./config/database").connect();
-  // Start server
   app.listen(PORT, () => console.log(`Server listening on port: ${PORT}.`));
 };
 

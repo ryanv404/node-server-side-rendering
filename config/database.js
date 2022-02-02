@@ -8,8 +8,7 @@ exports.connect = () => {
       console.log("Successfully connected to database!");
     })
     .catch((error) => {
-      console.log("Database connection failed. Exiting now...");
-      console.error(error);
+      console.log(error);
       process.exit(1);
     });
 };

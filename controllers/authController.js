@@ -1,19 +1,16 @@
 const User = require('../models/User');
-const Token = require('../models/Token');
 const crypto = require('crypto');
 const {
-  attachCookiesToResponse,
-  createTokenUser,
   sendVerificationEmail,
   sendResetPasswordEmail,
   createHash,
 } = require('../utils/index');
 
-const homepage = (req, res) => {
+const showHomepage = (req, res) => {
   res.render('home', {title: "Welcome"});
 };
 
-const register = async (req, res) => {
+const registerUser = async (req, res) => {
   const {first_name, last_name, email, password, confirm_pw} = req.body;
 
   // Check if email address is already in DB
@@ -71,7 +68,7 @@ const verifyEmail = async (req, res) => {
     return res.redirect("/");
   }
 
-  // Verify user in the DB
+  // Set user to verified in the DB
   user.isVerified = true;
   user.verifiedOn = Date.now();
   user.verificationToken = '';
@@ -81,8 +78,9 @@ const verifyEmail = async (req, res) => {
   return res.redirect("/");
 };
 
-const login = async (req, res) => {
+const loginUser = async (req, res) => {
   const {email, password} = req.body;
+
   // Ensure user provided both an email and password
   if (!email || !password) {
     req.flash("error_msg", "Please provide both an email and a password.");
@@ -106,59 +104,11 @@ const login = async (req, res) => {
     req.flash("error_msg", "Please verify your email address to log in.");
     return res.redirect("/");
   }
-
-  const tokenUser = createTokenUser(user);
-
-  // Create refresh token
-  let refreshToken = '';
-
-  // Check for existing token
-  const existingToken = await Token.findOne({user: user._id});
-
-  if (existingToken) {
-    const {isValid} = existingToken;
-    if (!isValid) {
-      req.flash("error_msg", "Invalid credentials");
-      return res.redirect("/");
-    }
-    refreshToken = existingToken.refreshToken;
-    attachCookiesToResponse({res, user: tokenUser, refreshToken});
-
-    return res.redirect("/dashboard");
-  }
-
-  // Create and store a new token
-  refreshToken = crypto.randomBytes(40).toString('hex');
-  const userAgent = req.headers['user-agent'];
-  const ip = req.ip;
-  const userToken = {
-    refreshToken, 
-    ip, 
-    userAgent, 
-    user: user._id
-  };
-
-  await Token.create(userToken);
-
-  attachCookiesToResponse({res, user: tokenUser, refreshToken});
-
   return res.redirect("/dashboard");
 };
 
-const logout = async (req, res) => {
-  // Delete the user's token
-  await Token.findOneAndDelete({user: req.user.userId});
-
-  // Set accessToken & refreshToken to 'logout' and expiration to now
-  res.cookie('accessToken', 'logout', {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.cookie('refreshToken', 'logout', {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-
+const logoutUser = async (req, res) => {
+  req.logout();
   req.flash("success_msg", "You have been logged out.");
   return res.redirect("/");
 };
@@ -262,7 +212,7 @@ const resetPassword = async (req, res) => {
 const ensureAuthenticated = (req, res, next) => {
   // Protect routes that require log in
   if (req.isAuthenticated()) return next();
-  req.flash('error_msg', 'Please log in to view this page.');
+  req.flash('error_msg', 'You must be logged in to view this page.');
   res.redirect('/');
 };
 
@@ -272,27 +222,27 @@ const forwardAuthenticated = (req, res, next) => {
   res.redirect('/dashboard');      
 };
 
-const rememberMeMiddleware = (req, res, next) => {
-  if (req.body.remember_me) {
-    // Set max age of cookie to 1 day if remember me was checked
-    const oneDay = 1000 * 60 * 60 * 24;
-    req.session.cookie.originalMaxAge = oneDay;
-  } else {
-    req.session.cookie.expires = false;
-  }
-  next();
-};
+// const rememberMeMiddleware = (req, res, next) => {
+//   if (req.body.remember_me) {
+//     // Set max age of cookie to 1 day if remember me was checked
+//     const oneDay = 1000 * 60 * 60 * 24;
+//     req.session.cookie.originalMaxAge = oneDay;
+//   } else {
+//     req.session.cookie.expires = false;
+//   }
+//   next();
+// };
 
 // User's dashboard
-const dashboard = (req, res) => {
+const showDashboard = (req, res) => {
   res.render("dashboard", {title: "Dashboard"});
 };
 
 module.exports = {
-  homepage,
-  register,
-  login,
-  logout,
+  showHomepage,
+  registerUser,
+  loginUser,
+  logoutUser,
   verifyEmail,
   forgotPassword,
   forgotPasswordPage,
@@ -300,6 +250,5 @@ module.exports = {
   resetPasswordPage,
   ensureAuthenticated,
   forwardAuthenticated,
-  rememberMeMiddleware,
-  dashboard
+  showDashboard
 };

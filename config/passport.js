@@ -4,16 +4,21 @@ const User = require("../models/User");
 module.exports = (passport) => {
   passport.use(new LocalStrategy({usernameField: "email"}, 
     async (email, password, done) => {
-      // Match user by email
-      const user = await User.findOne({email});
-      if (!user) {
-        return done(null, false, {message: 'That email address is not registered.'});
-      }
+      try {
+        // Match user by email
+        const user = await User.findOne({email});
+        if (!user) return done(null, false, {message: 'That email address is not registered.'});
 
-      // Check if provided password matches user's stored password
-      const isMatch = await user.comparePassword(password);
-      if (isMatch) return done(null, user);
-      return done(null, false, {message: "Your password was incorrect."});
+        // Check if provided password matches user's stored password
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) return done(null, false, {message: "Your password was incorrect."});
+        
+        // Pass on the authenticated user
+        return done(null, user);
+      } catch (error) {
+        console.log(error);
+        return done(error);
+      }
     }
   ));
 
@@ -22,7 +27,12 @@ module.exports = (passport) => {
   });
 
   passport.deserializeUser(async (id, done) => {
-    const user = await User.findById(id)
-    return done(null, user);
+    try {
+      const user = await User.findById(id)
+      return done(null, user);
+    } catch (error) {
+      console.log(error);
+      return done(error);
+    }
   });
 };
