@@ -1,21 +1,18 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { ensureAuthenticated } = require('../controllers/authController');
+const {ensureAuthenticated} = require("../controllers/authController");
 const {
-  createReview,
   getAllReviews,
-  getSingleReview,
+  getReview,
+  createReview,
   updateReview,
-  deleteReview,
+  deleteReview
 } = require('../controllers/reviewController');
 
-router.route('/')
-  .post(ensureAuthenticated, createReview)
-  .get(getAllReviews);
-
-router.route('/:id')
-  .get(getSingleReview)
-  .patch(ensureAuthenticated, updateReview)
-  .delete(ensureAuthenticated, deleteReview);
+router.get("/", ensureAuthenticated, getAllReviews);
+router.get("/:reviewID", ensureAuthenticated, getReview);
+router.post("/", ensureAuthenticated, createReview);
+router.put("/update/:reviewID", ensureAuthenticated, updateReview);
+router.delete("/delete/:reviewID", ensureAuthenticated, deleteReview);
 
 module.exports = router;

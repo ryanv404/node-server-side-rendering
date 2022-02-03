@@ -1,25 +1,19 @@
-const express = require("express");
-const router = express.Router();
-const {ensureAuthenticated} = require("../controllers/authController");
 const Task = require("../models/Task");
 
 // Get the user's tasks
-router.get('/', ensureAuthenticated, async (req, res) => {
+const getAllTasks = async (req, res) => {
   let tasks = [];
   try {
     tasks = await Task.find({taskOwner: req.user._id});
   } catch (err) {
     console.log(err);
+    tasks = [];
   }
-  res.render("tasks", {
-    user: req.user,
-    title: "Tasks",
-    tasks
-  });
-});
+  res.render("tasks", {title: "Tasks", tasks});
+};
 
 // Create a new task
-router.post('/', ensureAuthenticated, async (req, res) => {
+const createTask = async (req, res) => {
   try {
     const newTask = new Task({
       taskName: req.body.task,
@@ -30,10 +24,10 @@ router.post('/', ensureAuthenticated, async (req, res) => {
     console.log(err);
   }
   res.redirect("/tasks");
-});
+};
 
 // Update a task
-router.put('/update/:taskID', ensureAuthenticated, async (req, res) => {
+const updateTask = async (req, res) => {
   let updateObj = {};
   try {
     const task = await Task.findById(req.params.taskID);
@@ -50,10 +44,10 @@ router.put('/update/:taskID', ensureAuthenticated, async (req, res) => {
     console.log(err);
   }
   res.redirect("/tasks");
-});
+};
 
 // Update a task status
-router.patch('/update/:taskID', ensureAuthenticated, async (req, res) => {
+const updateTaskStatus = async (req, res) => {
   try {
     const completed = await Task.findByIdAndUpdate(req.params.taskID, 
       {$set: {taskStatus: req.query.status}}
@@ -67,16 +61,22 @@ router.patch('/update/:taskID', ensureAuthenticated, async (req, res) => {
   console.log(err);
   }
   res.redirect("/tasks");
-});
+};
 
 // Delete a task
-router.delete('/delete/:taskID', ensureAuthenticated, async (req, res) => {
+const deleteTask = async (req, res) => {
   try {
     await Task.findByIdAndDelete(req.params.taskID);
   } catch (err) {
     console.log(err);
   }
   res.redirect("/tasks");
-});
+};
 
-module.exports = router;
+module.exports = {
+  getAllTasks,
+  createTask,
+  updateTask,
+  updateTaskStatus,
+  deleteTask
+};

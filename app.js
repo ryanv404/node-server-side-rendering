@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+// Modules
 const path = require("path");
 const methodOverride = require("method-override");
 const MongoStore = require("connect-mongo");
@@ -11,14 +12,20 @@ const helmet = require("helmet");
 const xss = require("xss-clean");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
+const {connectToDB} = require("./config/database");
+const passport = require("passport");
 
-// Express
+// Routers
+const userRouter = require("./routes/userRoutes");
+const authRouter = require("./routes/authRoutes");
+const orderRouter = require("./routes/orderRoutes");
+const reviewRouter = require("./routes/reviewRoutes");
+// const productRouter = require("./routes/productRoutes");
+const taskRouter = require("./routes/taskRoutes");
+
+// Initialize express
 const express = require("express");
 const app = express();
-
-// Passport Config
-const passport = require("passport");
-require("./config/passport")(passport);
 
 // Trust one reverse proxy for deployment
 app.set("trust proxy", 1);
@@ -30,34 +37,33 @@ app.use(
   })
 );
 
-// EJS configuration
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-
-// Middleware
-// Express body parsers
+// Body parsing middleware
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+
+// Directory configuration
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use("/public", express.static(path.join(__dirname, "public")));
+
 // Redirect POST request to DELETE or PUT with "?_method=DELETE" or "?_method=PUT"
 app.use(methodOverride("_method"));
+
+// Config logger for use during development
 if (process.env.NODE_ENV === "development") {
-  // Load logger in dev mode only
   const logger = require("morgan");
   app.use(logger("dev"));
-}
-// Set content security policies
+};
+
+// Set security policies
 app.use(
   helmet({
     contentSecurityPolicy: require("./config/csp")
   })
 );
 app.use(cors());
-// Sanitize data in req.body, req.query, and req.params
 app.use(xss());
-// Remove keys beginning with '$' to prevent query selector injection attacks
 app.use(mongoSanitize());
-app.use("/public", express.static(path.join(__dirname, "public")));
-// Attach file objects from input fields onto req.files
 app.use(fileUpload());
 
 // Express session config
@@ -71,40 +77,36 @@ app.use(
       mongoUrl: process.env.MONGO_URI,
       collectionName: "sessions",
     }),
+    cookie: {
+      // 1 day
+      maxAge: 86400000
+    }
   })
 );
 
-// Passport middleware
+// Passport Config
+require("./config/passport")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Connect flash
+// Flash message handling
 app.use(flash());
-
-// Global variables
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
   res.locals.error = req.flash("error");
+  res.locals.isLoggedIn = req.user ? true : false;
   next();
 });
 
 // Routes
-const userRouter = require("./routes/userRoutes");
-const authRouter = require("./routes/authRoutes");
-const orderRouter = require("./routes/orderRoutes");
-const reviewRouter = require("./routes/reviewRoutes");
-const productRouter = require("./routes/productRoutes");
-
 app.use("/", authRouter);
 app.use("/users", require("./routes/users.js"));
-app.use("/tasks", require("./routes/tasks.js"));
+app.use("/tasks", taskRouter);
 app.use("/posts", require("./routes/posts.js"));
-app.use("/reviews", require("./routes/reviews.js"));
-
+app.use("/reviews", reviewRouter);
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/products", productRouter);
-app.use("/api/v1/reviews", reviewRouter);
+// app.use("/api/v1/products", productRouter);
 app.use("/api/v1/orders", orderRouter);
 
 // Error handlers
@@ -114,10 +116,9 @@ app.use(require("./middleware/error-handler"));
 // Start server
 const PORT = process.env.PORT || 3000;
 const start_server = () => {
-  require("./config/database").connect();
-  app.listen(PORT, () => console.log(`Server listening on port: ${PORT}.`));
+  app.listen(PORT, () => console.log(`[server] Listening on port: ${PORT}`));
+  connectToDB();
 };
-
 start_server();
 
 module.exports = app;

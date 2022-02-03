@@ -13,13 +13,14 @@ const {
   resetPasswordPage,
   showDashboard,
   ensureAuthenticated,
-  forwardAuthenticated
+  forwardAuthenticated,
+  rememberMeMiddleware
 } = require("../controllers/authController");
 
 router.get('/', forwardAuthenticated, showHomepage)
 router.get('/dashboard', ensureAuthenticated, showDashboard)
 router.post('/register', registerUser);
-router.post('/login', passport.authenticate('local', {failureRedirect: '/', failureFlash: true}), loginUser);
+router.post('/login', passport.authenticate('local', {failureRedirect: '/', failureFlash: true}), rememberMeMiddleware, loginUser);
 router.delete('/logout', ensureAuthenticated, logoutUser);
 router.get('/verify-email', verifyEmail);
 router.route('/reset-password').get(resetPasswordPage).post(resetPassword);
