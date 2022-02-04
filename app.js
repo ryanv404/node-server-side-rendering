@@ -116,7 +116,8 @@ app.use(require("./middleware/error-handler"));
 // Start server
 const PORT = process.env.PORT || 3000;
 const start_server = () => {
-  app.listen(PORT, () => console.log(`[server] Listening on port: ${PORT}`));
+  // ANSI text styling: cyan
+  app.listen(PORT, () => console.log("\x1b[36m%s\x1b[0m", `[server] Listening on port: ${PORT}`));
   connectToDB();
 };
 start_server();
