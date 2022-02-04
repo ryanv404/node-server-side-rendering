@@ -1,27 +1,26 @@
-const nodemailer = require("nodemailer");
+require('dotenv').config({path: '../.env'});
+const sgMail = require('@sendgrid/mail');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendEmail = async ({to, subject, html}) => {
-  // Create an Ethereal test acct to send test messages that are stored
-  // on the ethereal.email website.
-  // let testAccount = await nodemailer.createTestAccount();
+  try {
+    // Message object
+    const msg = {
+      to,
+      from: 'Ryan <404rv404@gmail.com>', 
+      subject,
+      html
+    };
+    
+    // Send message via SendGrid
+    await sgMail.send(msg);
+    return;
 
-  // Create a SMTP transporter object
-  let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    auth: {
-      user: "vicenta.douglas77@ethereal.email",
-      pass: "npawFPdcBhpHWNm6GT",
-    },
-  });
-
-  // Message object
-  return transporter.sendMail({
-    from: 'Ryan <ryan@example.com>',
-    to,
-    subject,
-    html,
-  });
+  } catch (error) {
+    console.error(error);
+    if (error.response) {console.error(error.response.body)}
+  }
 };
 
 module.exports = sendEmail;

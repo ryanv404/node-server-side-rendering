@@ -46,7 +46,6 @@ const registerUser = async (req, res) => {
     const origin = process.env.BASE_URL;
     
     await sendVerificationEmail({
-      name: user.first_name || "there",
       email: user.email,
       verificationToken: user.verificationToken,
       origin,
@@ -154,7 +153,8 @@ const forgotPassword = async (req, res) => {
     }
     
     // Prevent user from requesting new reset link early
-    if (user.passwordTokenExpirationDate && (user.passwordTokenExpirationDate < currentDate)) {
+    const currentDate = new Date();
+    if (user.passwordTokenExpirationDate && (user.passwordTokenExpirationDate > currentDate)) {
       req.flash("error_msg", "Please wait at least 10 minutes before requesting another reset link.");
       return res.redirect("/forgot-password");
     }
@@ -163,7 +163,6 @@ const forgotPassword = async (req, res) => {
     // Send password reset email
     const origin = process.env.BASE_URL;
     await sendResetPasswordEmail({
-      name: user.first_name || "there",
       email: user.email,
       token: passwordToken,
       origin,
