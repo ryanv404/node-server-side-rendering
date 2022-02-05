@@ -6,7 +6,7 @@ const methodOverride = require("method-override");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
 const flash = require("connect-flash");
-const fileUpload = require("express-fileupload");
+// const fileUpload = require("express-fileupload");
 const rateLimiter = require("express-rate-limit");
 const helmet = require("helmet");
 const xss = require("xss-clean");
@@ -22,6 +22,8 @@ const orderRouter = require("./routes/orderRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
 // const productRouter = require("./routes/productRoutes");
 const taskRouter = require("./routes/taskRoutes");
+const postRouter = require("./routes/postRoutes");
+const profileRouter = require("./routes/profileRoutes");
 
 // Initialize express
 const express = require("express");
@@ -101,13 +103,13 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/", authRouter);
-app.use("/users", require("./routes/users.js"));
+app.use("/users/profile", profileRouter);
 app.use("/tasks", taskRouter);
-app.use("/posts", require("./routes/posts.js"));
+app.use("/posts", postRouter);
 app.use("/reviews", reviewRouter);
-app.use("/api/v1/users", userRouter);
+// app.use("/api/v1/users", userRouter);
 // app.use("/api/v1/products", productRouter);
-app.use("/api/v1/orders", orderRouter);
+// app.use("/api/v1/orders", orderRouter);
 
 // Error handlers
 app.use(require("./middleware/not-found"));

@@ -1,10 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const {ensureAuthenticated} = require("../controllers/authController");
 const Post = require("../models/Post");
 
 // Get all of a user's posts
-router.get("/", ensureAuthenticated, async (req, res) => {
+const getAllPosts = async (req, res) => {
   let posts = [];
   try {
     posts = await Post.find({postOwner: req.user._id});
@@ -16,10 +13,10 @@ router.get("/", ensureAuthenticated, async (req, res) => {
     title: "Posts",
     posts
   });
-});
+};
 
 // Create a new post
-router.post("/", ensureAuthenticated, async (req, res) => {
+const createPost = async (req, res) => {
   try {
     const newPost = new Post({
       postTitle: req.body.postTitle,
@@ -31,10 +28,10 @@ router.post("/", ensureAuthenticated, async (req, res) => {
     console.log(err);
   }
   res.redirect("/posts");
-});
+};
 
 // Update a post
-router.put("/:postID", ensureAuthenticated, async (req, res) => {
+const updatePost = async (req, res) => {
   let updateObj = {};
   try {
     const post = await Post.findById(req.params.postID);
@@ -51,16 +48,21 @@ router.put("/:postID", ensureAuthenticated, async (req, res) => {
     console.log(err);
   }
   res.redirect("/posts");
-});
+};
 
 // Delete a post
-router.delete("/:postID", ensureAuthenticated, async (req, res) => {
+const deletePost = async (req, res) => {
   try {
     await Post.findByIdAndDelete(req.params.postID);
   } catch (err) {
     console.log(err);
   }
   res.redirect("/posts");
-});
+};
 
-module.exports = router;
+module.exports = {
+  getAllPosts, 
+  createPost, 
+  updatePost, 
+  deletePost
+};

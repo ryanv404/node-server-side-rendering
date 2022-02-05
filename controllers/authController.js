@@ -7,7 +7,7 @@ const {
 } = require('../utils/index');
 
 const showHomepage = (req, res) => {
-  res.render('home', {title: "Welcome"});
+  return res.render('home', {title: "Welcome"});
 };
 
 const registerUser = async (req, res) => {
@@ -60,7 +60,7 @@ const registerUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     req.flash("error_msg", "There was an error. Please try again later.");
-    res.redirect('/');
+    return res.redirect('/');
   }
 };
 
@@ -87,15 +87,14 @@ const verifyEmail = async (req, res) => {
   } catch (error) {
     console.log(error);
     req.flash("error_msg", "There was an error. Please try again later.");
-    res.redirect('/');
+    return res.redirect('/');
   }
 };
 
 const loginUser = async (req, res) => {
   try {
-    const {email, password} = req.body;
-
     // Ensure user provided both an email and password
+    const {email, password} = req.body;
     if (!email || !password) {
       req.flash("error_msg", "Please provide both an email and a password.");
       return res.redirect("/");
@@ -134,7 +133,7 @@ const logoutUser = async (req, res) => {
 };
 
 const forgotPasswordPage = (req, res) => {
-  res.render("forgot_pass", {title: "Forgot Password"});
+  return res.render("forgot_pass", {title: "Forgot Password"});
 };
 
 const forgotPassword = async (req, res) => {
@@ -182,20 +181,19 @@ const forgotPassword = async (req, res) => {
   } catch (error) {
     console.log(error);
     req.flash("error_msg", "There was an error. Please try again later.");
-    res.redirect('/');
+    return res.redirect('/');
   }
 };
   
 const resetPasswordPage = (req, res) => {
   const {token, email} = req.query;
-  res.render('reset_pass', {title: "Reset Password", token, email})
+  return res.render('reset_pass', {title: "Reset Password", token, email})
 }
 
 const resetPassword = async (req, res) => {
   try{
-    const {token, email, password, confirm_pw} = req.body;
-
     // Ensure that the user's token, email, and passwords were provided
+    const {token, email, password, confirm_pw} = req.body;
     if (!token || !email || !password || !confirm_pw) {
       req.flash("error_msg", "Please provide all values.");
       return res.redirect(`/reset-password?token=${token}&email=${email}`);
@@ -232,7 +230,7 @@ const resetPassword = async (req, res) => {
   } catch (error) {
     console.log(error);
     req.flash("error_msg", "There was an error. Please try again later.");
-    res.redirect('/');
+    return res.redirect('/');
   }
 };
 
@@ -243,13 +241,13 @@ const ensureAuthenticated = (req, res, next) => {
     return next();
   }
   req.flash('error_msg', 'You must be logged in to view this page.');
-  res.redirect('/');
+  return res.redirect('/');
 };
 
 const forwardAuthenticated = (req, res, next) => {
   // Forward logged-in user to the dashboard
   if (!req.isAuthenticated()) return next();
-  res.redirect('/dashboard');      
+  return res.redirect('/dashboard');      
 };
 
 const rememberMeMiddleware = (req, res, next) => {
@@ -263,7 +261,7 @@ const rememberMeMiddleware = (req, res, next) => {
 
 // User's dashboard
 const showDashboard = (req, res) => {
-  res.render("dashboard", {title: "Dashboard"});
+  return res.render("dashboard", {title: "Dashboard"});
 };
 
 module.exports = {
