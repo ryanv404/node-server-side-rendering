@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("partials/head", {title: title}); %>
+  </head>
+  <body>
+    <%- include("partials/navbar"); %>
+    <%- include("partials/messages"); %>
+    <div class="container-sm my-5 pt-5">
+      <h1 class="mt-4 mb-5 text-center">Users API Home</h1>
+      <button type="button" class="btn btn-info">Get all users</button>
+      <button type="button" class="btn btn-info my-3 mx-4">Get a single user</button>
+      <button type="button" class="btn btn-info">Show current user</button>
+      <button type="button" class="btn btn-info my-3 mx-4">Update user</button>
+      <button type="button" class="btn btn-info">Update a user's password</button>
+    </div>
+  </body>
+</html>

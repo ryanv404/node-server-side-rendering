@@ -2,6 +2,10 @@ const User = require('../models/User');
 const {StatusCodes} = require('http-status-codes');
 const CustomError = require('../errors');
 
+const getUsersHome = (req, res) => {
+  res.render('users', {title: "Users API"});
+}
+
 const getAllUsers = async (req, res) => {
   const users = await User.find({role: 'user'}).select('-password');
 
@@ -59,6 +63,7 @@ const updateUserPassword = async (req, res) => {
 };
 
 module.exports = {
+  getUsersHome, 
   getAllUsers,
   getSingleUser,
   showCurrentUser,

@@ -66,7 +66,7 @@ app.use(
 app.use(cors());
 app.use(xss());
 app.use(mongoSanitize());
-app.use(fileUpload());
+// app.use(fileUpload());
 
 // Express session config
 app.use(
@@ -107,7 +107,7 @@ app.use("/users/profile", profileRouter);
 app.use("/tasks", taskRouter);
 app.use("/posts", postRouter);
 app.use("/reviews", reviewRouter);
-// app.use("/api/v1/users", userRouter);
+app.use("/api/v1/users", userRouter);
 // app.use("/api/v1/products", productRouter);
 // app.use("/api/v1/orders", orderRouter);
 
