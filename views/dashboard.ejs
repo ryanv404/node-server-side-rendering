@@ -8,10 +8,10 @@
     <%- include("partials/messages"); %>
 
     <div class="container-sm shadow-lg py-4 rounded" style="margin-top: 100px;">
-      <h1 class="display-3 text-center mt-5 mb-3">
+      <h1 class="display-3 text-center my-5">
         Welcome to your dashboard!
       </h1>
-      <p class="lead text-center my-5">This is the dashboard.</p>
+      <p class="lead text-center my-4">This is the dashboard.</p>
       <p class="fs-6 text-center mb-3">Check out these features:</p>
       <ul class="list-inline d-flex justify-content-center mt-4">
         <li class="list-inline-item">
@@ -26,8 +26,16 @@
         <li class="list-inline-item">
           <a class="text-decoration-none" href="/reviews">Movie reviews</a>
         </li>
+      </ul>
+      <ul class="list-inline d-flex justify-content-center mt-4">
         <li class="list-inline-item">
           <a class="text-decoration-none" href="/api/v1/users/home">Users API</a>
+        </li>
+        <li class="list-inline-item mx-4">
+          <a class="text-decoration-none" href="/api/v1/products/home">Products API</a>
+        </li>
+        <li class="list-inline-item">
+          <a class="text-decoration-none" href="/api/v1/orders/home">Orders API</a>
         </li>
       </ul>
     </div>

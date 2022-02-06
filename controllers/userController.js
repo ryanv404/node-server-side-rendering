@@ -1,24 +1,29 @@
 const User = require('../models/User');
 const {StatusCodes} = require('http-status-codes');
-const CustomError = require('../errors');
 
 const getUsersHome = (req, res) => {
   res.render('users', {title: "Users API"});
 }
 
 const getAllUsers = async (req, res) => {
-  const users = await User.find({role: 'user'}).select('-password');
+  const users = await User.find({role: 'user'})
+    .select('first_name last_name email role isVerified name');
 
   res.status(StatusCodes.OK).json({users});
 };
 
 const getSingleUser = async (req, res) => {
-  const user = await User.findOne({_id: req.params.id}).select('-password');
-  if (!user) {
-    throw new CustomError.NotFoundError(`No user with the id: ${req.params.id}.`);
+  try {
+    const user = await User.findOne({_id: req.params.id}).select('-password');
+    if (!user) {
+      return res.json(`No user with the id: ${req.params.id}.`);
+    }
+    res.status(StatusCodes.OK).json({user});
+  } catch (error) {
+    if (error.name === "CastError") return res.json(`${req.params.id} is an invalid user ID`);
+    return res.json(`No user with the id: ${req.params.id}.`);
   }
 
-  res.status(StatusCodes.OK).json({user});
 };
 
 const showCurrentUser = async (req, res) => {
@@ -38,28 +43,7 @@ const updateUser = async (req, res) => {
   user.name = name;
   await user.save();
 
-
   res.status(StatusCodes.OK).json({});
-};
-
-const updateUserPassword = async (req, res) => {
-  const {oldPassword, newPassword} = req.body;
-  if (!oldPassword || !newPassword) {
-    throw new CustomError.BadRequestError('Please provide both values.');
-  }
-  const user = await User.findOne({_id: req.user.userId});
-
-  // Ensure that the provided password matches the user's old password
-  const isPasswordCorrect = await user.comparePassword(oldPassword);
-  if (!isPasswordCorrect) {
-    throw new CustomError.UnauthenticatedError('Invalid Credentials');
-  }
-
-  // Update the user's password in the DB
-  user.password = newPassword;
-  await user.save();
-
-  res.status(StatusCodes.OK).json({msg: 'Success! Password was updated.'});
 };
 
 module.exports = {
@@ -68,5 +52,4 @@ module.exports = {
   getSingleUser,
   showCurrentUser,
   updateUser,
-  updateUserPassword
 };

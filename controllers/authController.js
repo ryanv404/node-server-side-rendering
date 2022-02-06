@@ -12,7 +12,7 @@ const showHomepage = (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const {first_name, last_name, email, password, confirm_pw} = req.body;
+    const {first_name, last_name, username, email, password, confirm_pw} = req.body;
 
     // Check if email address is already in DB
     const alreadyExists = await User.findOne({email});
@@ -36,7 +36,8 @@ const registerUser = async (req, res) => {
     const user = await User.create({
       first_name,
       last_name,
-      email,
+      email, 
+      username, 
       password,
       role,
       verificationToken

@@ -6,7 +6,7 @@ const methodOverride = require("method-override");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
 const flash = require("connect-flash");
-// const fileUpload = require("express-fileupload");
+const fileUpload = require("express-fileupload");
 const rateLimiter = require("express-rate-limit");
 const helmet = require("helmet");
 const xss = require("xss-clean");
@@ -20,7 +20,7 @@ const userRouter = require("./routes/userRoutes");
 const authRouter = require("./routes/authRoutes");
 const orderRouter = require("./routes/orderRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
-// const productRouter = require("./routes/productRoutes");
+const productRouter = require("./routes/productRoutes");
 const taskRouter = require("./routes/taskRoutes");
 const postRouter = require("./routes/postRoutes");
 const profileRouter = require("./routes/profileRoutes");
@@ -33,9 +33,9 @@ const app = express();
 app.set("trust proxy", 1);
 app.use(
   rateLimiter({
-    // Limit each IP to a max of 60 requests per 15 minutes
+    // Limit each IP to a max of 200 requests per 15 minutes
     windowMs: 15 * 60 * 1000,
-    max: 60,
+    max: 200,
   })
 );
 
@@ -66,7 +66,7 @@ app.use(
 app.use(cors());
 app.use(xss());
 app.use(mongoSanitize());
-// app.use(fileUpload());
+app.use(fileUpload());
 
 // Express session config
 app.use(
@@ -108,8 +108,8 @@ app.use("/tasks", taskRouter);
 app.use("/posts", postRouter);
 app.use("/reviews", reviewRouter);
 app.use("/api/v1/users", userRouter);
-// app.use("/api/v1/products", productRouter);
-// app.use("/api/v1/orders", orderRouter);
+app.use("/api/v1/products", productRouter);
+app.use("/api/v1/orders", orderRouter);
 
 // Error handlers
 app.use(require("./middleware/not-found"));

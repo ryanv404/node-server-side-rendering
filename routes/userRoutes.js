@@ -6,7 +6,6 @@ const {
   getSingleUser,
   showCurrentUser,
   updateUser,
-  updateUserPassword, 
   getUsersHome
 } = require('../controllers/userController');
 
@@ -15,6 +14,5 @@ router.route('/home').get(ensureAuthenticated, getUsersHome);
 router.route('/me').get(ensureAuthenticated, showCurrentUser);
 router.route('/:id').get(ensureAuthenticated, getSingleUser);
 router.route('/updateUser').patch(ensureAuthenticated, updateUser);
-router.route('/updateUserPassword').patch(ensureAuthenticated, updateUserPassword);
 
 module.exports = router;

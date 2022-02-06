@@ -3,6 +3,10 @@ const {StatusCodes} = require('http-status-codes');
 const CustomError = require('../errors');
 const path = require('path');
 
+const getProductsHome = (req, res) => {
+  res.render('products', {title: "Products API"});
+}
+
 const createProduct = async (req, res) => {
   // Include 'user: userId' in the req.body object and then create a new product
   req.body.user = req.user.userId;
@@ -82,6 +86,7 @@ const uploadImage = async (req, res) => {
 };
 
 module.exports = {
+  getProductsHome, 
   createProduct,
   getAllProducts,
   getSingleProduct,

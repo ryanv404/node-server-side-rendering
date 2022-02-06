@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("partials/head", {title: title}); %>
+  </head>
+  <body>
+    <%- include("partials/navbar"); %>
+    <%- include("partials/messages"); %>
+    <div class="container-sm my-5 pt-5">
+      <h1 class="mt-4 mb-5 text-center">Orders API Home</h1>
+      <hr>
+      <div class="d-flex justify-content-center flex-wrap">
+        <button type="button" id="get_all_products" class="btn btn-info mt-3 me-3">Get all orders</button>
+        <button type="button" class="btn btn-info mt-3 me-3">Get a single order</button>
+        <button type="button" class="btn btn-info mt-3 me-3">Current user's orders</button>
+        <button type="button" class="btn btn-info mt-3 me-3">Update order</button>
+        <button type="button" class="btn btn-info mt-3">Create order</button>
+      </div>
+      <hr class="my-4">
+      <ul id="result" class="my-4"></ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </body>
+</html>

@@ -9,6 +9,10 @@ const fakeStripeAPI = async ({amount, currency}) => {
   return {client_secret, amount};
 };
 
+const getOrdersHome = (req, res) => {
+  res.render('orders', {title: "Orders API"});
+}
+
 const createOrder = async (req, res) => {
   const {items: cartItems, tax, shippingFee} = req.body;
 
@@ -114,6 +118,7 @@ const updateOrder = async (req, res) => {
 };
 
 module.exports = {
+  getOrdersHome, 
   getAllOrders,
   getSingleOrder,
   getCurrentUserOrders,
