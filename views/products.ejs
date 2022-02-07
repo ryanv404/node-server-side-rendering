@@ -18,8 +18,53 @@
         <button type="button" class="btn btn-info mt-3">Upload image</button>
       </div>
       <hr class="my-4">
-      <ul id="result" class="my-4"></ul>
+      <form action="/api/v1/products" method="post">
+        <!-- Product name -->
+        <div class="form-floating mx-3 mt-4">
+          <input type="text" name="product_name" id="product_name" placeholder="Product name">
+          <label for="product_name">Product name</label>
+        </div>
+        <!-- Price -->
+        <div class="form-floating mx-3 mt-4">
+          <input type="number" name="product_price" id="product_price" placeholder="Price">
+          <label for="product_price">Price</label>
+        </div>
+        <!-- Description -->
+        <div class="form-floating mx-3 mt-4">
+          <input type="text" name="product_description" id="product_description" placeholder="Product description">
+          <label for="product_description">Product description</label>
+        </div>
+        <!-- Image -->
+        <div class="form-floating mx-3 mt-4">
+          <input type="file" name="product_image" id="product_image" placeholder="Product image">
+          <label for="product_image">Product image</label>
+        </div>
+        <!-- Category -->
+        <div class="form-floating mx-3 mt-4">
+          <input type="text" name="product_category" id="product_category" placeholder="Product category">
+          <label for="product_category">Product category</label>
+        </div>
+        <!-- Company -->
+        <div class="form-floating mx-3 mt-4">
+          <input type="text" name="product_company" id="product_company" placeholder="Product company">
+          <label for="product_company">Product company</label>
+        </div>
+        <!-- Colors -->
+        <div class="form-floating mx-3 mt-4">
+          <input type="colors" name="product_colors" id="product_colors" placeholder="Product colors">
+          <label for="product_colors">Product colors</label>
+        </div>
+        <!-- Inventory -->
+        <div class="form-floating mx-3 mt-4">
+          <input type="number" name="inventory" id="inventory" placeholder="Inventory">
+          <label for="inventory">Inventory</label>
+        </div>
+        <!-- Submit button -->
+        <div class="pt-4 d-flex justify-content-center">
+          <button class="px-5 py-2 btn btn-outline-success shadow" type="submit">Create Product</button>
+        </div>
+      </form>
+      <hr class="my-4">
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
 </html>

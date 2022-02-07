@@ -7,9 +7,11 @@ module.exports = {
       "https://kit.fontawesome.com/",
     ],
     connectSrc: [
-      "http://localhost:3000/api/v1/users", 
-      "http://localhost:3000/api/v1/users/me", 
-      "https://ka-f.fontawesome.com/releases/"
+      "*"
+    ],
+    imgSrc: [
+      "*", 
+      "data:"
     ],
     upgradeInsecureRequests: null
   },

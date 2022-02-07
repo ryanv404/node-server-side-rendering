@@ -24,6 +24,7 @@ const productRouter = require("./routes/productRoutes");
 const taskRouter = require("./routes/taskRoutes");
 const postRouter = require("./routes/postRoutes");
 const profileRouter = require("./routes/profileRoutes");
+const bookRouter = require("./routes/bookRoutes");
 
 // Initialize express
 const express = require("express");
@@ -58,12 +59,12 @@ if (process.env.NODE_ENV === "development") {
 };
 
 // Set security policies
-app.use(
-  helmet({
-    contentSecurityPolicy: require("./config/csp")
-  })
-);
-app.use(cors());
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: require("./config/csp")
+//   })
+// );
+// app.use(cors());
 app.use(xss());
 app.use(mongoSanitize());
 app.use(fileUpload());
@@ -107,6 +108,7 @@ app.use("/users/profile", profileRouter);
 app.use("/tasks", taskRouter);
 app.use("/posts", postRouter);
 app.use("/reviews", reviewRouter);
+app.use('/books', bookRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/orders", orderRouter);
