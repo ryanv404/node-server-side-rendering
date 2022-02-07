@@ -1,0 +1,172 @@
+*,
+:before,
+:after {
+  box-sizing: border-box;
+}
+
+body {
+  background: #424242;
+}
+
+form {
+  width: 320px;
+  margin: 45px auto;
+}
+
+h1,
+h2 {
+  font-weight: 300;
+  text-align: center;
+  color: #2196f3;
+}
+
+h5 {
+  text-align: center;
+  text-transform: uppercase;
+  color: mix(white, #424242, 70%);
+}
+
+hr.sep {
+  background: #2196f3;
+  box-shadow: none;
+  border: none;
+  height: 2px;
+  width: 25%;
+  margin: 0px auto 45px auto;
+}
+
+.emoji {
+  font-size: 1.2em;
+}
+
+.group {
+  position: relative;
+  margin: 45px 0;
+}
+
+textarea {
+  resize: none;
+}
+
+input,
+textarea {
+  background: none;
+  color: whitesmoke;
+  font-size: 18px;
+  padding: 10px 10px 10px 5px;
+  display: block;
+  width: 320px;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid mix(white, #424242, 70%);
+}
+
+input:focus {
+  outline: none;
+}
+
+input:focus ~ label,
+input:valid ~ label {
+  top: -14px;
+  font-size: 12px;
+  color: #2196f3;
+}
+
+input:focus ~ .bar:before {
+  width: 320px;
+}
+
+input[type="password"] {
+  letter-spacing: 0.3em;
+}
+
+label {
+  color: mix(white, #424242, 70%);
+  font-size: 16px;
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 5px;
+  top: 10px;
+  transition: 300ms ease all;
+}
+
+.bar {
+  position: relative;
+  display: block;
+  width: 320px;
+}
+
+.bar:before {
+  content: "";
+  height: 2px;
+  width: 0;
+  bottom: 0px;
+  position: absolute;
+  background: #2196f3;
+  transition: 300ms ease all;
+  left: 0%;
+}
+
+.btn {
+  background: #fff;
+  color: mix(black, mix(white, #424242, 70%), 25%);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn:hover {
+  color: mix(black, mix(white, #424242, 70%), 30%);
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.18), 0 5px 5px rgba(0, 0, 0, 0.12);
+}
+
+.btn.btn-link {
+  background: #2196f3;
+  color: mix(white, #2196f3, 80%);
+}
+
+.btn.btn-link:hover {
+  background: darken(#2196f3, 5%);
+  color: mix(white, #2196f3, 85%);
+}
+
+.btn-submit {
+  background: #2196f3;
+  color: mix(white, #2196f3, 70%);
+}
+
+.btn-submit:hover {
+  background: darken(#2196f3, 5%);
+  color: mix(white, #2196f3, 85%);
+}
+
+.btn-general {
+  background: #2196f3;
+  color: mix(white, #2196f3, 70%);
+}
+
+.btn-general:hover {
+  background: darken(#2196f3, 5%);
+  color: mix(white, #2196f3, 85%);
+}
+
+.btn-cancel {
+  background: #eee;
+}
+
+.btn-cancel:hover {
+  background: darken(#eee, 5%);
+  color: mix(black, mix(white, #424242, 70%), 30%);
+}
+
+.btn-box {
+  text-align: center;
+  margin: 50px 0;
+}
