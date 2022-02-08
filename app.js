@@ -14,6 +14,7 @@ const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
 const {connectToDB} = require("./config/database");
 const passport = require("passport");
+const compression = require("compression");
 
 // Routers
 const userRouter = require("./routes/userRoutes");
@@ -40,9 +41,11 @@ app.use(
   })
 );
 
-// Body parsing middleware
+// Body middleware
+app.use(compression());
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use(fileUpload());
 
 // Directory configuration
 app.set("view engine", "ejs");
@@ -59,15 +62,13 @@ if (process.env.NODE_ENV === "development") {
 };
 
 // Set security policies
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: require("./config/csp")
-//   })
-// );
-// app.use(cors());
+app.use(helmet({
+  contentSecurityPolicy: false, 
+  crossOriginEmbedderPolicy: false,
+}));
+app.use(cors());
 app.use(xss());
 app.use(mongoSanitize());
-app.use(fileUpload());
 
 // Express session config
 app.use(

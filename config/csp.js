@@ -7,12 +7,11 @@ module.exports = {
       "https://kit.fontawesome.com/",
     ],
     connectSrc: [
-      "*"
+      "'self'"
     ],
     imgSrc: [
-      "*", 
+      "'self'", 
       "data:"
-    ],
-    upgradeInsecureRequests: null
+    ]
   },
 };

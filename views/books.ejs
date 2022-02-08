@@ -10,14 +10,20 @@
     <div class="container-sm" style="margin-top: 100px;">
       <h1 class="display-3 text-center mt-5 mb-4">BookFinder</h1>
       <div class="row py-4 mx-auto my-5">
-        <div class="col-sm-10 offset-sm-1 col-lg-6 offset-lg-3 form-floating d-flex">
-          <input id="book_input" class="form-control me-2 shadow" type="text" name="book_search" id="book_search" placeholder="Search for a book" autocomplete="off"/>
-          <label class="ps-4" for="book_search">Search for a book</label>
-          <button id="book_btn" class="btn btn-info px-4 shadow bg-gradient" type="button">Search</button>
-        </div>
+        <form action="/books/search" method="get">
+          <div class="col-sm-10 offset-sm-1 col-lg-6 offset-lg-3 form-floating d-flex">
+            <input id="book_input" class="form-control me-2 shadow" type="text" name="q" id="book_search" placeholder="Search for a book" autocomplete="off"/>
+            <label for="book_search">Search for a book</label>
+            <button id="book_btn" class="btn btn-info px-4 shadow bg-gradient" type="submit">Search</button>
+          </div>
+        </form>
       </div>
-      <hr class="my-4">
-      <div id="book_results" class="card-group"></div>
+      <hr class="mt-3 mb-5">
+      <% if (results.length > 0) { %>
+      <div id="book_results" class="card-group flex-column align-items-center">
+        <%- results %>
+      </div>
+      <% }; %>
       <div class="w-25 mx-auto my-5 text-center">
         <div class="d-flex flex-column">
           <a href="/dashboard" class="text-decoration-none">Dashboard</a>
@@ -27,6 +33,5 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/public/books.js"></script>
-    <script src="/public/book_listener.js"></script>
   </body>
 </html>
