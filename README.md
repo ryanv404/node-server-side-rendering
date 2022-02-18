@@ -7,3 +7,4 @@
 - Post messages and reviews
 - Add tasks
 - User management API
+- Book search using Google Books API
